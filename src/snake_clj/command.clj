@@ -2,30 +2,30 @@
 
 (defmulti  handle (fn [command] command))
 
-(defmethod handle :default 
+(defmethod handle :default
   [_]
   :not-a-command)
 
-(defmethod handle :up 
+(defmethod handle :up
   [_]
   "pass")
 
-(defmethod handle :down 
+(defmethod handle :down
   [_]
   "pass")
 
-(defmethod handle :left 
+(defmethod handle :left
   [_]
   "pass")
 
-(defmethod handle :right 
+(defmethod handle :right
   [_]
   "pass")
 
-(defmethod handle :down 
+(defmethod handle :down
   [_]
   "pass")
 
-(defmethod handle :quit 
+(defmethod handle :quit
   [_]
   "pass")

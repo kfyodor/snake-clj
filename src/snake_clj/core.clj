@@ -2,13 +2,15 @@
   (:require [clojure.core.async :as async]
             [lanterna.screen    :as s]
             [snake-clj.controls :as controls]
-            [snake-clj.command  :as command]))
+            [snake-clj.command  :as command]
+            [snake-clj.snake    :as snake]))
 
 ; state
-(def events  (async/chan))
-(def screen  (s/get-screen))
-(def frame   20)
-(def timeout (atom 1000))
+(def events     (async/chan))
+(def screen     (delay
+                  (s/get-screen)))
+(def frame-freq 40)
+(def timeout    (atom 1000))
 
 ;code
 
@@ -23,14 +25,8 @@
     (vec 
       (take 10 (repeat [])))))
 
-(defn run-game []
-  (loop []
-    (s/redraw screen)
-    (Thread/sleep 40)
-    (recur)))
-
 (defn run-keyboard-listener []
-  (go-loop-let [key (s/get-key-blocking screen)]
+  (go-loop-let [key (s/get-key-blocking @screen)]
     (async/>! events key)))
 
 (defn run-commands-listener []
@@ -38,11 +34,21 @@
                 com (controls/command key)]
     (command/handle com)))
 
-(defn game-state [])
+(defn run-game-state []
+  (go-loop-let [snake (snake/move!)]
+    (println snake)
+    (Thread/sleep @timeout)))
+
+(defn run-game []
+  (run-game-state)
+  (loop []
+    (s/redraw @screen)
+    (Thread/sleep frame-freq)
+    (recur)))
 
 (defn -main
   [& args]
-  (s/start screen)
+  (s/start @screen)
   (run-keyboard-listener)
   (run-commands-listener)
   (run-game)
