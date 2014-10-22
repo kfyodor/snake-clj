@@ -1,6 +1,8 @@
-# snake_clj
+# Snake
 
-A Clojure library designed to ... well, that part is up to you.
+A famous game written in Clojure.
+
+Not done.
 
 ## Usage
 
