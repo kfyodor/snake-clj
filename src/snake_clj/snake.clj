@@ -64,7 +64,7 @@
   [snake direction]
   "TODO snake cannot move backwards"
   (let [head (partial append-head direction)]
-    (->
+    (->>
       snake
       drop-tail
       head
