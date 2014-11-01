@@ -21,13 +21,13 @@
 
 (deftest test-head-movement
   (testing "Moves head left"
-    (is (= (move-head test-snake :left) [2 1])))
+    (is (= (move-head :left test-snake) [2 1])))
   (testing "Moves head right"
-    (is (= (move-head test-snake :right) [4 1])))
+    (is (= (move-head :right test-snake) [4 1])))
   (testing "Moves head top"
-    (is (= (move-head test-snake :up) [3 2])))
+    (is (= (move-head :up test-snake) [3 2])))
   (testing "Moves head bottom")
-    (is (= (move-head test-snake :down) [3 0])))
+    (is (= (move-head :down test-snake) [3 0])))
 
 (deftest test-snake-movement
   ; (testing "Moves snake right"
@@ -35,8 +35,27 @@
   ; We assume that snake has been moving right
   ; I have to figure out how to model snake's movement better
   (testing "Moves snake right"
-    (is (= (move test-snake :right) [[2 1][3 1][4 1]])))
+    (is (= (move :right test-snake) [[2 1][3 1][4 1]])))
   (testing "Moves snake up"
-    (is (= (move test-snake :up) [[2 1][3 1][3 2]])))
+    (is (= (move :up test-snake) [[2 1][3 1][3 2]])))
   (testing "Moves snake down"
-    (is (= (move test-snake :down) [[2 1][3 1][3 0]]))))
+    (is (= (move :down test-snake) [[2 1][3 1][3 0]]))))
+
+(deftest test-get-direction
+  (testing "direction"
+    (is (= (get-direction [[0 0][1 0]]) :right))
+    (is (= (get-direction [[0 0][0 1]]) :up))
+    (is (= (get-direction [[0 1][0 0]]) :down))
+    (is (= (get-direction [[1 0][0 0]]) :left))))
+
+(deftest test-opposite-directions
+  (testing "opposite?"
+    (is (= (opposite-directions? :left :right) true))
+    (is (= (opposite-directions? :right :left) true))
+    (is (= (opposite-directions? :up :down) true))
+    (is (= (opposite-directions? :down :up) true))
+    (is (= (opposite-directions? :up :left) false))
+    (is (= (opposite-directions? :right :down) false)) 
+    (comment "etc...")))
+
+

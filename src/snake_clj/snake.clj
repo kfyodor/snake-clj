@@ -1,30 +1,36 @@
-(ns snake-clj.snake)
+(ns snake-clj.snake
+  (:require [clojure.core.match :as m]))
 
 (defn get-x [point] (first  point))
 (defn get-y [point] (second point))
 
-; TODO: this should be in global atom
-
-; (def snake
-;   "Initial snake coords"
-;   (atom [[0, 0][1, 0][2, 0]]))
-
-; (def direction
-;   "Default: right"
-;   (atom :right))
-
-; (defn set-direction! [new-direction]
-;   (reset! direction new-direction))
-
-(defn head      [snake] (last snake))
+(defn head      [snake] (last   snake))
 (defn drop-tail [snake] (drop 1 snake))
 
 (defn normalize 
   [snake]
   "TODO coords normalization before rendering
-        should in different module I guess
+        should be in different module I guess
   "
   snake)
+
+(defn get-direction 
+  [snake]
+  (let [before-head (last (drop-last snake))
+        [x1 y1]     (head snake)
+        [x2 y2]     before-head]
+    (m/match [(compare x1 x2) (compare y1 y2)]
+      [ 1  0] :right
+      [ 0  1] :up
+      [-1  0] :left
+      [ 0 -1] :down)))
+
+(defn opposite-directions?
+  [old-direction new-direction]
+  (let [rules      #{[:left :right] [:up :down]}
+        directions [old-direction new-direction]]
+    (or (contains? rules [old-direction new-direction])
+        (contains? rules [new-direction old-direction]))))
 
 (defn check-world-around
   [snake]
@@ -33,43 +39,49 @@
   snake)
 
 (defmulti move-head
-  (fn [snake direction] direction))
+  (fn [direction snake] direction))
 
 (defmethod move-head :left
-  [snake, _]
+  [_, snake]
   [(->> snake head get-x dec)
    (->> snake head get-y)])
 
 (defmethod move-head :right
-  [snake, _]
+  [_, snake]
   [(->> snake head get-x inc)
    (->> snake head get-y)])
 
 (defmethod move-head :up
-  [snake, _]
+  [_, snake]
   [(->> snake head get-x)
    (->> snake head get-y inc)])
 
 (defmethod move-head :down
-  [snake, _]
+  [_, snake]
   [(->> snake head get-x) 
    (->> snake head get-y dec)])
 
 (defn- append-head
   [direction snake]
-  (let [new-head (move-head snake direction)]
+  (let [new-head (move-head direction snake)]
     (conj (vec snake) new-head)))
 
 (defn move
-  [snake direction]
-  "TODO snake cannot move backwards"
-  (let [head (partial append-head direction)]
-    (->>
-      snake
-      drop-tail
-      head
-      normalize
-      check-world-around)))
+  ([snake]
+   (let [direction (get-direction snake)]
+     (move direction direction snake)))
 
-(defn move! [])
-  ; (swap! snake move))
+  ([direction snake]
+   (let [old-direction (get-direction snake)]
+     (move old-direction direction snake)))
+
+  ([old-direction new-direction snake]
+   (let [opposite     (opposite-directions? new-direction old-direction)
+         direction    (if opposite old-direction new-direction)
+         get-new-head (partial append-head direction)]
+     (->>
+       snake
+       drop-tail
+       get-new-head
+       normalize
+       check-world-around))))

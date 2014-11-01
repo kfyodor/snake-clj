@@ -7,9 +7,10 @@
             [snake-clj.world    :as world]))
 
 ; state
-(def events     (async/chan))
-(def screen     (delay
-                  (s/get-screen)))
+(def keyboard (async/chan 1))
+(def events   (async/chan 1))
+(def screen   (delay
+                (s/get-screen)))
 (def frame-freq 40)
 (def ticks)
 
@@ -24,26 +25,27 @@
 (defn run-keyboard-listener []
   "Listens keyboard events"
   (go-loop-let [key (s/get-key-blocking @screen)]
-    (async/>! events key)))
+    (async/>! keyboard key)))
 
 (defn run-commands-listener []
   "Listens to parsed commands that 
    came from keyboard listener"
-  (go-loop-let [key (async/<!! events)
+  (go-loop-let [key (async/<!! keyboard)
                 com (controls/command key)]
-    (command/handle com)))
+    (command/handle com events)))
 
 (defn run-renderer []
   "Rendering thread"
-  (go-loop []
-    (s/redraw @screen)
-    (Thread/sleep frame-freq)
-    (recur)))
+  (async/go []
+    (loop []
+      (s/redraw @screen)
+      (Thread/sleep frame-freq)
+      (recur))))
 
 (defn game []
   "Game loop. Blocks main thread until game is over"
   (loop []
-    (if (not (@w/world :game-over?)) (recur))))
+    (if (not (@world/world :game-over?)) (recur))))
 
 (defn -main
   [& args]

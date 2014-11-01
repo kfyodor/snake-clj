@@ -1,31 +1,31 @@
 (ns snake-clj.command)
 
-(defmulti  handle (fn [command] command))
+(defmulti  handle (fn [events command] command))
 
 (defmethod handle :default
-  [_]
+  [_, _]
   :not-a-command)
 
 (defmethod handle :up
-  [_]
+  [events, _]
   "pass")
 
 (defmethod handle :down
-  [_]
+  [events, _]
   "pass")
 
 (defmethod handle :left
-  [_]
+  [events, _]
   "pass")
 
 (defmethod handle :right
-  [_]
+  [events, _]
   "pass")
 
 (defmethod handle :down
-  [_]
+  [events, _]
   "pass")
 
 (defmethod handle :quit
-  [_]
+  [_, _]
   "pass")
