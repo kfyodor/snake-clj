@@ -8,5 +8,6 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [clojure-lanterna "0.9.4"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [org.clojure/core.match "0.2.1"]]
+                 [org.clojure/core.match "0.2.1"]
+                 [clatrix "0.4.0"]]
   :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.5.2"]]}})
