@@ -1,5 +1,6 @@
 (ns snake-clj.command)
 
+
 (defmulti  handle (fn [events command] command))
 
 (defmethod handle :default
