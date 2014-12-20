@@ -1,8 +1,8 @@
-(ns snake-clj.sparse-matrix)
+(ns snake-clj.util.matrix)
 
 ; (defn each-with-index [func coll]
 ;   (loop [c coll idx 0]
-;     (let [h (first c) 
+;     (let [h (first c)
 ;           r (rest  c)]
 ;     (func idx h)
 ;     (if (seq r) (recur r (inc idx))))))
@@ -11,9 +11,9 @@
   [n blank]
   (take n (repeat blank)))
 
-(defn distinct-by 
+(defn distinct-by
   [f coll]
-  (pmap 
+  (pmap
     #(let [[_ v] %1] (last v))
     (group-by f coll)))
 
@@ -25,7 +25,7 @@
     (from-sparse-row "" row-size points))
 
   ([blank row-size points]
-   (let [filter-fn       (fn [p] 
+   (let [filter-fn       (fn [p]
                            (let [x (first p)]
                              (and (>= x 0) (<  x row-size))))
          distinct-points (distinct-by first points)

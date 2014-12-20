@@ -7,14 +7,14 @@
 (defn head      [snake] (last   snake))
 (defn drop-tail [snake] (drop 1 snake))
 
-(defn normalize 
+(defn normalize
   [snake]
   "TODO coords normalization before rendering
         should be in different module I guess
   "
   snake)
 
-(defn get-direction 
+(defn get-direction
   [snake]
   (let [before-head (last (drop-last snake))
         [x1 y1]     (head snake)
@@ -58,7 +58,7 @@
 
 (defmethod move-head :down
   [_, snake]
-  [(->> snake head get-x) 
+  [(->> snake head get-x)
    (->> snake head get-y dec)])
 
 (defn- append-head

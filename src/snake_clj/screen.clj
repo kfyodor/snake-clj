@@ -2,7 +2,7 @@
   (:require [clojure.string    :as string])
   (:require [lanterna.screen   :as scr]))
 
-(def screen 
+(def screen
   (delay (scr/get-screen)))
 
 (def size 20)

@@ -2,5 +2,5 @@
 
 (def world
   (atom
-    { :game_over? false 
+    { :game_over? false
       :timeout    1000}))
