@@ -7,13 +7,6 @@
 (defn head      [snake] (last   snake))
 (defn drop-tail [snake] (drop 1 snake))
 
-(defn normalize
-  [snake]
-  "TODO coords normalization before rendering
-        should be in different module I guess
-  "
-  snake)
-
 (defn get-direction
   [snake]
   (let [before-head (last (drop-last snake))
@@ -21,9 +14,9 @@
         [x2 y2]     before-head]
     (m/match [(compare x1 x2) (compare y1 y2)]
       [ 1  0] :right
-      [ 0  1] :up
+      [ 0 -1] :up
       [-1  0] :left
-      [ 0 -1] :down)))
+      [ 0  1] :down)))
 
 (defn opposite-directions?
   [old-direction new-direction]
@@ -31,12 +24,6 @@
         directions [old-direction new-direction]]
     (or (contains? rules [old-direction new-direction])
         (contains? rules [new-direction old-direction]))))
-
-(defn check-world-around
-  [snake]
-  "TODO check for apples and snake parts
-        should be in different module too"
-  snake)
 
 (defmulti move-head
   (fn [direction snake] direction))
@@ -54,12 +41,12 @@
 (defmethod move-head :up
   [_, snake]
   [(->> snake head get-x)
-   (->> snake head get-y inc)])
+   (->> snake head get-y dec)])
 
 (defmethod move-head :down
   [_, snake]
   [(->> snake head get-x)
-   (->> snake head get-y dec)])
+   (->> snake head get-y inc)])
 
 (defn- append-head
   [direction snake]
@@ -82,6 +69,4 @@
      (->>
        snake
        drop-tail
-       get-new-head
-       normalize
-       check-world-around))))
+       get-new-head))))

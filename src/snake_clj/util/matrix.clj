@@ -1,12 +1,5 @@
 (ns snake-clj.util.matrix)
 
-; (defn each-with-index [func coll]
-;   (loop [c coll idx 0]
-;     (let [h (first c)
-;           r (rest  c)]
-;     (func idx h)
-;     (if (seq r) (recur r (inc idx))))))
-
 (defn blank-region
   [n blank]
   (take n (repeat blank)))

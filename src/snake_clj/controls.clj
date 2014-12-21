@@ -1,16 +1,16 @@
 (ns snake-clj.controls)
 
 (defn expand-key [m control]
-  (let [keys  (first control) 
+  (let [keys  (first control)
         value (second control)]
-    (reduce 
+    (reduce
       #(assoc %1 %2 value) m keys)))
 
 (defn expand-controls [controls]
-  (reduce 
+  (reduce
     expand-key {} controls))
 
-(def controls 
+(def controls
   (expand-controls
     {[:w :up]     :up
      [:s :down]   :down
@@ -23,6 +23,6 @@
         key (cond
               (instance? java.lang.Character  k) (keyword (str k))
               (instance? clojure.lang.Keyword k) k
-              :else 
+              :else
                 (keyword k))]
     (controls key)))
